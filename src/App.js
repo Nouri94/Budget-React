@@ -7,7 +7,10 @@ import DispalyBalances from './components/DispalyBalances';
 import { useEffect, useState } from 'react';
 import EntryLines from './components/EntryLines';
 import ModelEdit from './components/ModelEdit';
+
 function App() {
+
+
   const [entries, setEntries] = useState(initialEntries)
   const [description, setDescription] = useState('')
   const [value, setValue] = useState('')
@@ -26,9 +29,9 @@ function App() {
       newEntries[index].value = value
       newEntries[index].isExpense = isExpense
       setEntries(newEntries)
-      resetEntry()     
+      resetEntry()
     }
-     //eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   useEffect(() => {
@@ -47,6 +50,8 @@ function App() {
     setExpenseTotal(totalExpense)
     setIncomeTotal(totalIncome)
   }, [entries])
+
+
 
   function resetEntry() {
     setDescription('')
