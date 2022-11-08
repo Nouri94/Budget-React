@@ -1,17 +1,18 @@
-const reducer = (state = initialEntries, action) => {
-    switch (action.type) {
+import { combineReducers } from 'redux';
+const EntryReducer = (state = initialEntries, action) => {
+    switch (action.type) {        
         case 'ADD_ENTRY': return [...state, action.payload]
-        case 'REMOVE_ENTRY': return [...state.filter(entry => entry.id !== action.payload)]
+        case 'REMOVE_ENTRY': return [...state.filter(entry => entry.id !== action.payload.id)]
         default: return state
     }
 }
 
-export default reducer;
+
 
 var initialEntries = [
     {
         id: 1,
-        description: "Work Income",
+        description: "Work Income1",
         value: 100,
         isExpense: false
 
@@ -38,3 +39,6 @@ var initialEntries = [
 
     },
 ]
+
+const rootReducer = combineReducers({ EntryReducer })
+export default rootReducer;

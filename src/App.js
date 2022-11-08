@@ -7,11 +7,10 @@ import DispalyBalances from './components/DispalyBalances';
 import { useEffect, useState } from 'react';
 import EntryLines from './components/EntryLines';
 import ModelEdit from './components/ModelEdit';
-
-function App() {
-
-
-  const [entries, setEntries] = useState(initialEntries)
+import { connect } from "react-redux"
+import { bindActionCreators } from 'redux'
+import * as actions from './actions/entries.actions'
+function Apps(props) {
   const [description, setDescription] = useState('')
   const [value, setValue] = useState('')
   const [isExpense, setIsExpense] = useState(true)
@@ -20,19 +19,19 @@ function App() {
   const [incomeTotal, setIncomeTotal] = useState(0);
   const [expenseTotal, setExpenseTotal] = useState(0);
   const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    if (!isOpen && entryId) {
-      const index = entries.findIndex(entry => entry.id === entryId)
-      const newEntries = [...entries];
-      newEntries[index].description = description
-      newEntries[index].value = value
-      newEntries[index].isExpense = isExpense
-      setEntries(newEntries)
-      resetEntry()
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
+  const entries = props.entries;
+    useEffect(() => {
+      if (!isOpen && entryId) {
+        const index = entries.findIndex(entry => entry.id === entryId)
+        const newEntries = [...entries];
+        newEntries[index].description = description
+        newEntries[index].value = value
+        newEntries[index].isExpense = isExpense
+        //setEntries(newEntries)
+        resetEntry()
+      }
+      //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen])
 
   useEffect(() => {
     let totalIncome = 0
@@ -59,10 +58,6 @@ function App() {
     setIsExpense(true)
   }
 
-  const deleteEntry = (id) => {
-    const result = entries.filter(entry => entry.id !== id)
-    setEntries(result)
-  }
 
   const EditEntry = (id) => {
     if (id) {
@@ -77,54 +72,35 @@ function App() {
 
   }
 
-  const addEntry = () => {
-    const result = entries.concat({ id: entries.length + 1, description, value, isExpense })
-    setEntries(result)
-    resetEntry()
-  }
+  // const addEntry = () => {
+  //   const result = entries.concat({ id: entries.length + 1, description, value, isExpense })
+  //   setEntries(result)
+  //   resetEntry()
+  // }
   return (
     <Container>
       <MainHeader title="Budget" />
       <DispalyBalance title="Your Balance" value={total} size='small'></DispalyBalance>
       <DispalyBalances incomeTotal={incomeTotal} expenseTotal={expenseTotal}></DispalyBalances>
       <MainHeader type="h3" title="History" />
-      <EntryLines entries={entries} deleteEntry={deleteEntry} EditEntry={EditEntry}></EntryLines>
+      <EntryLines entries={entries}  EditEntry={EditEntry} {...props}></EntryLines>
       <MainHeader type="h3" title="Add new transaction" />
-      <NewEntryForm addEntry={addEntry} setIsExpense={setIsExpense} setDescription={setDescription} setValue={setValue} description={description} value={value} isExpense={isExpense}></NewEntryForm>
+      <NewEntryForm  setIsExpense={setIsExpense} setDescription={setDescription} setValue={setValue} description={description} value={value} isExpense={isExpense}></NewEntryForm>
       <ModelEdit isOpen={isOpen} setIsOpen={setIsOpen} setIsExpense={setIsExpense} setDescription={setDescription} setValue={setValue} description={description} value={value} isExpense={isExpense}></ModelEdit>
     </Container>
   );
 }
 
+function mapStateToProps(state){
+  return{   
+      entries : state.EntryReducer,
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators(actions, dispatch)
+}
+const App = connect(mapStateToProps, mapDispatchToProps)(Apps)
 export default App;
 
-var initialEntries = [
-  {
-    id: 1,
-    description: "Work Income",
-    value: 100,
-    isExpense: false
 
-  },
-  {
-    id: 2,
-    description: "Rent",
-    value: 200,
-    isExpense: true
-
-  },
-  {
-    id: 3,
-    description: "Water bill",
-    value: 300,
-    isExpense: true
-
-  },
-  {
-    id: 4,
-    description: "Power Bill",
-    value: 400,
-    isExpense: true
-
-  },
-]
