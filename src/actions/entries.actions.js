@@ -8,7 +8,15 @@ export function addEntryRedux(payload) {
 export function removeEntryRedux(id) {
     return {
         type: 'REMOVE_ENTRY',
-        payload: { id } // ES6 or we can write as above post: post
+        payload: { id } 
     }
 }
+
+export function editEntryRedux(id, entry) {
+    return {
+        type: 'UPDATE_ENTRY',
+        payload: { id, entry } 
+    }
+}
+
 

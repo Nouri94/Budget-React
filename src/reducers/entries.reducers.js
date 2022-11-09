@@ -1,11 +1,16 @@
-import { combineReducers } from 'redux';
-const EntryReducer = (state = initialEntries, action) => {
+export const EntryReducer = (state = initialEntries, action) => {
     switch (action.type) {        
         case 'ADD_ENTRY': return [...state, action.payload]
         case 'REMOVE_ENTRY': return [...state.filter(entry => entry.id !== action.payload.id)]
+        case 'UPDATE_ENTRY': let newEntries;
+        newEntries = [...state];
+        const index = newEntries.findIndex((entry)=>entry.id === action.payload.id);
+        newEntries[index] = {...action.payload.entry}; return newEntries;
         default: return state
     }
 }
+
+
 
 
 
@@ -40,5 +45,3 @@ var initialEntries = [
     },
 ]
 
-const rootReducer = combineReducers({ EntryReducer })
-export default rootReducer;
